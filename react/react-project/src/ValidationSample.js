@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Controller from './Controller';
 import './ValidationSample.css';
 
 class ValidationSample extends Component {
@@ -14,10 +15,14 @@ class ValidationSample extends Component {
     this.setState({ password: e.target.value });
   };
   //버튼을 클릭했을 때
-  handleButtonClick = () => {
+  handleButtonClick = e => {
     //this.setState로 state값 업데이트
     // this.state.password === '0000'의 결과값이 true or false로 나온다
     this.setState({ clicked: true, validated: this.state.password === '0000' });
+    //myController컴포넌트 내부의 함수와 변수에 접근
+    this.myController.logging(this.state.password);
+    this.myController.clickPlusMinus(e);
+    console.log(this.myController.state.count);
   };
 
   //리셋 버튼 클릭했을 때
@@ -40,6 +45,11 @@ class ValidationSample extends Component {
         />
         <button onClick={this.handleButtonClick}>패스워드 검증</button>
         <button onClick={this.handleReset}>리셋</button>
+        <Controller
+          ref={r => {
+            this.myController = r;
+          }}
+        />
       </>
     );
   }
