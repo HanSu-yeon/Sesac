@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, useRef } from "react";
 
 //전달된 배열의 값의 평균을 반환하는 함수
 const getAverage = (numbers) => {
@@ -14,23 +14,28 @@ const getAverage = (numbers) => {
 const Average = () => {
   const [list, setList] = useState([]); //숫가값을 담고 있는 리스트
   const [number, setNumber] = useState(""); //입력창에 입력한 숫자
+  const inputElement = useRef(null);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
+    console.log("핸들체인지");
+
     setNumber(e.target.value);
-  };
-  const handleClick = () => {
+  }, []); //빈 배열= 마운트될 때만 handleChange함수를 생성
+  const handleClick = useCallback(() => {
     //list(배열)에 number를 추가 =>업데이트된 새 배열을 반환하는 concat함수를 사용
     //문자열 number를 parseInt함수를 이용해서 숫자로 변경해서 배열에 추가
+    console.log("핸들클릭");
     const newList = list.concat(parseInt(number));
     setList(newList);
     setNumber("");
-  };
+    inputElement.current.focus();
+  }, [number, list]); //number, list가 변경될 때 handleClick함수를 생성
   //[list]배열의 내용이 바뀔때만 getAverage함수를 실행해라
   const avg = useMemo(() => getAverage(list), [list]);
   return (
     <>
       <div>
-        <input value={number} onChange={handleChange} />
+        <input value={number} onChange={handleChange} ref={inputElement} />
         <button onClick={handleClick}>등록</button>
         <div>
           {list.map((v, i) => {
@@ -38,6 +43,7 @@ const Average = () => {
           })}
         </div>
         <div>평균값: {avg}</div>
+        <div>입력값: {number}</div>
       </div>
     </>
   );
