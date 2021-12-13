@@ -1,21 +1,8 @@
-import React, { useState } from "react";
-import TodoTemplate from "./components/TodoTemplate";
-import TodoInsert from "./components/TodoInsert";
-import TodoList from "./components/TodoList";
+import React from 'react';
+import TodoTemplate from './components/TodoTemplate';
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: "리액트 기초 알아보기",
-    },
-  ]);
-  return (
-    <TodoTemplate>
-      <TodoInsert />
-      <TodoList />
-    </TodoTemplate>
-  );
+  return <TodoTemplate>일정관리만들어보자</TodoTemplate>;
 };
 
 export default App;
