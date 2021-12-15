@@ -11,6 +11,10 @@ const TodoInsert = ({ onInsert }) => {
 
   const onSubmit = useCallback(
     (e) => {
+      if (inputValue === '') {
+        e.preventDefault();
+        return;
+      }
       onInsert(inputValue);
       setInputValue('');
       e.preventDefault();
