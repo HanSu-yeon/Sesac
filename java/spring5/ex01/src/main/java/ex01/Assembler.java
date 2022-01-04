@@ -23,5 +23,4 @@ public class Assembler {
 	public ChangePasswordService getChangePasswordService() {
 		return this.changePasswordService;
 	}
-
 }

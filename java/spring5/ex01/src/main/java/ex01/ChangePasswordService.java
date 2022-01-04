@@ -6,6 +6,9 @@ public class ChangePasswordService {
 	// DI방법
 	private MemberDao memberDao;
 
+	public ChangePasswordService() {
+	}
+
 //	1. 생성자를 통해서 의존객체를 주입	
 	public ChangePasswordService(MemberDao memberDao) {
 		this.memberDao = memberDao;
