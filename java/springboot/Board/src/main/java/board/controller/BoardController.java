@@ -22,7 +22,9 @@ public class BoardController {
 		ModelAndView mv = new ModelAndView("/board/boardList");
 		// TODO. 비즈니스 로직을 호출, 실행 => 서비스
 		List<BoardDto> data = boardService.selectBoardList();
-		mv.addObject("list", data);
+		mv.addObject("resultList", data);
 		return mv;
 	}
+	
+	@RequestMapping("/")
 }
