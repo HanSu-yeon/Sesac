@@ -1,7 +1,15 @@
-package ex01;
+package ex01.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import ex01.dao.MemberDao;
+import ex01.service.ChangePasswordService;
+import ex01.service.MemberInfoPrint;
+import ex01.service.MemberListPrint;
+import ex01.service.MemberPrint;
+import ex01.service.MemberRegisterService;
+import ex01.service.VersionPrinter;
 
 //설정 정보를 가지고 있다는 것을 알려줄때쓰는것
 @Configuration // <=이 어노테이션을 적어주면 객체를 어떻게 만들고 객체간의 관계가 어떻게 설정되는지를 알려준다(담고있다)
@@ -48,4 +56,13 @@ public class AppCtx {
 		return mip;
 
 	}
+
+	@Bean
+	public VersionPrinter versionPrinter() {
+		VersionPrinter versionPrinter = new VersionPrinter();
+		versionPrinter.setMajorVersion(1);
+		versionPrinter.setMinorVersion(0);
+		return versionPrinter;
+	}
+
 }

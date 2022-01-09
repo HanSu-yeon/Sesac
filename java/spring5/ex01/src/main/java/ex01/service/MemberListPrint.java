@@ -1,6 +1,9 @@
-package ex01;
+package ex01.service;
 
 import java.util.Collection;
+
+import ex01.dao.MemberDao;
+import ex01.vo.Member;
 
 public class MemberListPrint {
 	// memberDao와 memberPrint를 같이 사용함

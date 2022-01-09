@@ -1,49 +1,81 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { useRef, useState } from "react";
-import produce from "immer";
-
-function App() {
-  //리스트 항목의 고유 식별자(ID)
+import React, { useRef, useCallback, useState } from 'react';
+import produce from 'immer';
+const App = () => {
   const nextId = useRef(1);
   //사용자 이름과 아이디를 가지고 있는 객체
-  const [form, setForm] = useState({ name: "", username: "" });
+  const [form, setForm] = useState({ name: '', username: '' });
   //리스트 항목
   const [data, setData] = useState({
     array: [],
     uselessValue: null,
   });
+  //input수정하는 함수
+  const handleChange = useCallback(
+    e => {
+      const { name, value } = e.target;
 
-  const handleChange = (e) => {
-    //e로부터 name, value뽑아온다
-    const { name, value } = e.target;
-    setForm(
-      {
-        //들어오는 데이터가(?)배열과 객체이기때문에 불변성을 위지하기위해 복사하고 업데이는하는거다  => 매번 이렇게 하는건 번거롭다
-        //그래서 immer를 사용하는걸로 바꿔보자 (아직 안함)
+      setForm({
         ...form,
-        //계산된 속성명
         [name]: value,
-      },
-      [form]
-    );
-  };
+      });
+      // setForm(
+      //   produce(form,(draft)=>{
+      //     draft[name]=value
+      //   })
+      // )
+    },
+    [form]
+  );
+  //form등록
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      const info = {
+        id: nextId.current,
+        name: form.name,
+        username: form.username,
+      };
+      setData({
+        ...data,
+        array: data.array.concat(info),
+      });
+
+      setForm({
+        name: '',
+        username: '',
+      });
+      nextId.current++;
+    },
+    [data, form.name, form.username]
+  );
+
+  const handleRemove = useCallback(
+    id => {
+      setData({
+        ...data,
+        array: data.array.filter(i => i.id !== id),
+      });
+    },
+    [data]
+  );
   return (
     <div>
-      <form action="">
+      <form>
         <input name="username" value={form.username} onChange={handleChange} />
-        <input name="name" value={form.name} onChange={handleChange} />
-        <button type="submit">등록</button>
+        <input name="name" />
+        <button type="submit" onSubmit={handleSubmit}>
+          등록
+        </button>
       </form>
       <ul>
-        {data.array.map((d) => (
-          <li key={d.id}>
-            {d.username} ({d.name})
+        {data.array.map(info => (
+          <li key={info.id} onClick={() => handleRemove(info.id)}>
+            {info.username} ({info.name})
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
 
 export default App;

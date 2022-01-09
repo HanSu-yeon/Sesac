@@ -1,4 +1,4 @@
-package ex01;
+package ex01.exception;
 
 public class DuplicateMemberException extends Exception {
 	// 생성자 생성

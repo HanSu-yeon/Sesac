@@ -1,4 +1,7 @@
-package ex01;
+package ex01.service;
+
+import ex01.dao.MemberDao;
+import ex01.vo.Member;
 
 public class MemberInfoPrint {
 	private MemberDao memberDao;

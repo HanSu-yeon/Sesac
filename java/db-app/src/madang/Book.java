@@ -1,76 +1,80 @@
 package madang;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/*
+ * db연결하고 쿼리실행하는 메소드 들어있음
+ * */
 public class Book {
-	Connection con;
 
-	public Book(Connection con) {
-		this.con = con;
+	// DB 접속 정보
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/madang?serverTimezone=Asia/Seoul";
+	private static final String DB_USER = "madang";
+	private static final String DB_PASSWRD = "madang";
+	private Connection con;
+
+	// 생성자
+	public Book() {
+		// #1 JDBC 드라이버를 로딩
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			System.out.println("드라이버 로드 성공");
+		} catch (ClassNotFoundException e) {
+			System.out.println("드라이버를 찾을 수 없습니다.");
+			e.printStackTrace();
+		}
+
+		// #2 DB에 연결을 생성
+		try {
+			con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWRD);
+			System.out.println("데이터베이스 연결 성공");
+		} catch (SQLException e) {
+			System.out.println("데이터베이스 연결 실패");
+			e.printStackTrace();
+		}
+
 	}
 
-	// book 테이블 전체 조회
+	// ----------------------------------------------------------------//
+	// 메소드
+	// 1. book테이블 전체조회
 	public void select() {
-		// 쿼리를 정의
-		String sql = "SELECT bookid, bookname, publisher, price FROM book";
+		// 쿼리를 정의(작성)
+		String sql = "select bookid, bookname, publisher, price from book";
 		try {
-			// Statement객체를 생성
+			// statement 객체 생성
 			Statement stmt = con.createStatement();
 			// 쿼리 실행 및 실행 결과를 반환
 			ResultSet rs = stmt.executeQuery(sql);
 			// 실행 결과를 출력
-			// rs.next() : ResultSet에 저장된 select문 실행결과를 1행씩 넘겨서 다음 행이 있으면 true,없으면 false를
-			// 반환하는 함수
 			while (rs.next()) {
 				System.out.print(rs.getInt("bookid") + "\t");
 				System.out.print(rs.getString("bookname") + "\t");
 				System.out.print(rs.getString("publisher") + "\t");
 				System.out.println(rs.getInt("price"));
+
 			}
+
 		} catch (SQLException e) {
-			System.out.println("쿼리 실행 오류");
+			System.out.println("쿼리실행오류");
 			e.printStackTrace();
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+
 	}
 
-	// 책 이름의 일부를 입력받아서 book 테이블 조회하는 기능
-	// 메소드 오버로딩
-	public void select(String keyword) {
-// 주석부분은 안전하지 않은 코드		
-//		String sql = "SELECT bookid, bookname, publisher, price FROM book WHERE bookname like '%" + keyword + "%'";
-//		try {
-//
-//			Statement stmt = con.createStatement();
-//			ResultSet rs = stmt.executeQuery(sql);
-
-		// 안전한 코드
-		// #1. 쿼리의 구조를 정의 = 변수 부분을 물음표로 마킹 (데이터 타입을 고려하지 않음)
-		String sql = "SELECT bookid, bookname, publisher, price FROM book WHERE bookname like ?";
-		try {
-			// #2. PreparedStatement 객체를 생성
-			// -connection.prepareStatement메소드를 이용
-			// -쿼리문의 구조를 파라미터로 전달
-			PreparedStatement stmt = con.prepareStatement(sql);
-			// #3. 변수에 값을 할당하고 쿼리를 실행
-			// PreparedStatement 객체에서 제공하는 set 메소드를 이용
-			// set메소드는 데이터 타입별로 있기 때문에 데이터 타입을 고려해서 사용
-			// 쿼리 실행시 별도의 sql문을 매개값으로 전달하지 않아도 된다 why? preparedStatement만들때 이미 쿼리의 구조를 알고 있기
-			// 때문에
-			stmt.setString(1, '%' + keyword + '%');
-			ResultSet rs = stmt.executeQuery(); // sql문 전달할 필요x
-			while (rs.next()) {
-				System.out.print(rs.getInt("bookid") + "\t");
-				System.out.print(rs.getString("bookname") + "\t");
-				System.out.print(rs.getString("publisher") + "\t");
-				System.out.println(rs.getInt("price"));
-			}
-		} catch (SQLException e) {
-			System.out.println("쿼리 실행 오류");
-			e.printStackTrace();
-		}
-	}
+	// 2. 책검색
+	// 메소드명을 새롭게 만들수도있지만 위에 select()메소드를 오버로딩했
+	public void select()
 }

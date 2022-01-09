@@ -8,7 +8,6 @@ const TodoInsert = ({ onInsert }) => {
   const onChange = useCallback((e) => {
     setInputValue(e.target.value);
   }, []);
-
   const onSubmit = useCallback(
     (e) => {
       if (inputValue === '') {

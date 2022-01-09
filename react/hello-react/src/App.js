@@ -1,8 +1,15 @@
+import MyComponentFunc from './MyComponentFunc';
+
 import React from 'react';
-import Todo from './Todo';
 
 const App = () => {
-  return <Todo />;
+  return (
+    <div>
+      <MyComponentFunc name="react" favoriteNumber={1}>
+        리액트 칠드런
+      </MyComponentFunc>
+    </div>
+  );
 };
 
 export default App;

@@ -7,6 +7,17 @@ import java.io.InputStreamReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import ex01.config.AppCtx;
+import ex01.exception.DuplicateMemberException;
+import ex01.exception.MemberNotFoundException;
+import ex01.exception.WrongIdPasswordException;
+import ex01.service.ChangePasswordService;
+import ex01.service.MemberInfoPrint;
+import ex01.service.MemberListPrint;
+import ex01.service.MemberRegisterService;
+import ex01.service.VersionPrinter;
+import ex01.vo.RegistRequest;
+
 public class MainForSpring {
 	private static ApplicationContext ctx = null;
 
@@ -36,9 +47,18 @@ public class MainForSpring {
 			} else if (command.startsWith("info")) {
 				// info email
 				doPrintInfo(command.split(" "));
+			} else if (command.equals("version")) {
+				doVersion();
 			}
 		}
 
+	}
+
+	private static void doVersion() {
+//		VersionPrinter versionPrinter = new VersionPrinter();
+//		versionPrinter.print();
+		VersionPrinter versionPrinter = ctx.getBean("versionPrinter", VersionPrinter.class);
+		versionPrinter.print();
 	}
 
 	private static void doPrintInfo(String[] args) {

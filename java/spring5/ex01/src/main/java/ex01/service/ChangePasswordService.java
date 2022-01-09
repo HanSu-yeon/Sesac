@@ -1,4 +1,9 @@
-package ex01;
+package ex01.service;
+
+import ex01.dao.MemberDao;
+import ex01.exception.MemberNotFoundException;
+import ex01.exception.WrongIdPasswordException;
+import ex01.vo.Member;
 
 //데이터를 접근해야 하기 때문에 MemberDao필요함
 public class ChangePasswordService {
