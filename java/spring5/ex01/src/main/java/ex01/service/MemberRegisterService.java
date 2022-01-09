@@ -1,4 +1,9 @@
-package ex01;
+package ex01.service;
+
+import ex01.dao.MemberDao;
+import ex01.exception.DuplicateMemberException;
+import ex01.vo.Member;
+import ex01.vo.RegistRequest;
 
 //회원 등록 서비스
 //=> db연동이 필요함 : MemberDao

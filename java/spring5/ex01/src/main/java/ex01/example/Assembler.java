@@ -1,4 +1,8 @@
-package ex01;
+package ex01.example;
+
+import ex01.dao.MemberDao;
+import ex01.service.ChangePasswordService;
+import ex01.service.MemberRegisterService;
 
 public class Assembler {
 	// 우리 어플리케이션에서 필요로 하는 객체들을 갖고 있음

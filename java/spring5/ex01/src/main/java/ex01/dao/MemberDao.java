@@ -1,8 +1,10 @@
-package ex01;
+package ex01.dao;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import ex01.vo.Member;
 
 //DAO = Data Access Object
 //일반적으로 DB연동을 구현하는 클래스 (멤버 정보 저장하는 db)

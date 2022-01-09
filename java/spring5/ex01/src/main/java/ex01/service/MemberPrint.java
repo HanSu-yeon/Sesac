@@ -1,4 +1,6 @@
-package ex01;
+package ex01.service;
+
+import ex01.vo.Member;
 
 public class MemberPrint {
 	// 멤버 객체의 내용을 형식에 맞춰서 출력하는 클래스

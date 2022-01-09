@@ -1,8 +1,15 @@
-package ex01;
+package ex01.example;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import ex01.exception.DuplicateMemberException;
+import ex01.exception.MemberNotFoundException;
+import ex01.exception.WrongIdPasswordException;
+import ex01.service.ChangePasswordService;
+import ex01.service.MemberRegisterService;
+import ex01.vo.RegistRequest;
 
 public class Main {
 
