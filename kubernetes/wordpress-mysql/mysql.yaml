@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+spec:
+  ports: #서비스의 ip에 접근할 때 사용할 포트를 설정
+    - port: 3306
+  selector:
+    app: wordpress #mysql 디플로이먼트의 포드에 같은 라벨이 설정돼 있으므로 이 서비스에 의해 접근 가능한 대상으로 추가된다
+    tier: mysql
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql #디플로이먼트 이름
+  labels:
+    app: wordpress
+spec:
+  selector: #아래 label과 같은 이름을 가진 pod들을 select함
+    matchLabels:
+      app: wordpress
+      tier: mysql
+  template: #pod에대해 정의
+    metadata:
+      labels:
+        app: wordpress
+        tier: mysql
+    spec:
+      containers:
+        - name: mysql-container
+          image: mysql:5.7
+          env:
+            - name: MYSQL_DATABASE
+              value: wordpress
+            - name: MYSQL_ROOT_PASSWORD #컨테이너에 새롭게 등록될 환경 변수 이름
+              valueFrom:
+                secretKeyRef:
+                  name: secret-envfile #참조할 시크릿의 이름
+                  key: password #가져올 데이터 값의 키
+          ports: #포드 애플리케이션이 사용할 내부 포트
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc

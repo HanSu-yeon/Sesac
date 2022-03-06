@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-svc
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: wordpress
+    tier: frontend
+  type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wp-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce #속성이 ReadWriteOnce인 pv와 연결
+  resources:
+    requests:
+      storage: 1Gi #볼륨 크기가 최소 1Gi인 pv와 연결
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: frontend
+    spec:
+      containers:
+        - image: wordpress:5.5.3-apache
+          name: wordpress-container
+          env:
+            - name: WORDPRESS_DB_HOST #MySQL 서비스의 이름이 설정되며, WordPress는 서비스를 통해 데이터베이스에 접근한다
+              value: mysql-svc
+            - name: WORDPRESS_DB_USER
+              value: root
+            - name: WORDPRESS_DB_NAME
+              value: wordpress
+            - name: WORDPRESS_DB_PASSWORD #컨테이너에 새롭게 등록될 환경 변수 이름
+              valueFrom:
+                secretKeyRef:
+                  name: secret-envfile #참조할 시크릿의 이름
+                  key: password
+          ports:
+            - containerPort: 80
+              name: wordpress
+          volumeMounts:
+            - name: wordpress-persistence-storage
+              mountPath: /var/www/html
+      volumes:
+        - name: wordpress-persistence-storage
+          persistentVolumeClaim:
+            claimName: wp-pvc
